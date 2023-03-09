@@ -1,3 +1,4 @@
+import java.io._
 import org.apache.spark._
 import org.apache.spark.rdd.RDD
 import org.apache.spark.graphx._
@@ -14,7 +15,7 @@ object weaklyConnectedComponents {
             .setMaster("spark://master:7077")
         val sc = new SparkContext(conf)
 
-        val path = "hdfs://master:9000/user/user/data/test.txt"
+        val path = "hdfs://master:9000/user/user/data/web-Google.txt"
 
         // Load the edges as a graph
         val graph: Graph[Int, Int] = GraphLoader.edgeListFile(
@@ -24,12 +25,26 @@ object weaklyConnectedComponents {
             vertexStorageLevel = StorageLevel.MEMORY_AND_DISK
         )
 
-        // Compute the weakly connected components
-        val wcc: Graph[VertexId, Int] = graph.connectedComponents()
+        // Compute the weakly connected components and time the operation
+        val startTime = System.currentTimeMillis()
+        val weaklyConnectedComponents = graph.connectedComponents().vertices.collect().map{
+            case (id, comp) => s"$id $comp"
+        }
+        val endTime = System.currentTimeMillis()
 
-        // Print the results
-        println("Weakly connected components:")
-        wcc.vertices.collect().foreach(println)
+        // Write the results to seperate files for time and data
+        val timeTakenStr = s"${endTime - startTime} ms"
+
+        val times = new File("times/weaklyConnectedComponents.txt")
+        val bw = new BufferedWriter(new FileWriter(times, true))
+        bw.write(timeTakenStr + "\n")
+        bw.close()
+        
+        val outputs = new File("outputs/weaklyConnectedComponents.txt")
+        val bw2 = new BufferedWriter(new FileWriter(outputs))
+        bw2.write(weaklyConnectedComponents.mkString("\n"))
+        bw2.write("\n")
+        bw2.close()
 
         // Stop the Spark context
         sc.stop()
