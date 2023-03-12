@@ -1,29 +1,25 @@
 #!/bin/bash
 
-# run degreeCentrality 10 times
-for i in {1..10}
-do
-    echo "#$i Execution - degreeCentrality"
-    spark-submit --class degreeCentrality /home/user/workspace-graphx/target/scala-2.12/workspace-graphx_2.12-0.1.0-SNAPSHOT.jar
-done
+# Check if the number of arguments is correct
+if [ -z "$1" ] || [ -z "$2" ]
+  then
+    echo "Please provide two arguments: the number of times to run the job, and the name of the job."
+    exit 1
+fi
 
-# run shortestPaths 10 times
-for i in {1..10}
-do
-    echo "#$i Execution - shortestPaths"
-    spark-submit --class shortestPaths /home/user/workspace-graphx/target/scala-2.12/workspace-graphx_2.12-0.1.0-SNAPSHOT.jar
-done
+# Check if job name is valid
+case $2 in
+    degreeCentrality | shortestPaths | triangleCount | weaklyConnectedComponents)
+        ;;
+    *)
+        echo "Invalid job name. Allowed job names are degreeCentrality, shortestPaths, triangleCount, or weaklyConnectedComponents."
+        exit 1
+        ;;
+esac
 
-# run triangleCount 10 times
-for i in {1..10}
+# Run the job for the specified number of times
+for i in $(seq 1 $1)
 do
-    echo "#$i Execution - triangleCount"
-    spark-submit --class triangleCount /home/user/workspace-graphx/target/scala-2.12/workspace-graphx_2.12-0.1.0-SNAPSHOT.jar
-done
-
-# run weaklyConnectedComponents 10 times
-for i in {1..10}
-do
-    echo "#$i Execution - weaklyConnectedComponents"
-    spark-submit --class weaklyConnectedComponents /home/user/workspace-graphx/target/scala-2.12/workspace-graphx_2.12-0.1.0-SNAPSHOT.jar
+    echo "#$i Execution - $2"
+    (time spark-submit --class $2 /home/user/workspace-graphx/target/scala-2.12/workspace-graphx_2.12-0.1.0-SNAPSHOT.jar) 2>> /home/user/workspace-graphx/times/$2.txt
 done

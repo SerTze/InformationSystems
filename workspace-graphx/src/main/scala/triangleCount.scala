@@ -26,26 +26,15 @@ object triangleCount {
             vertexStorageLevel = StorageLevel.MEMORY_AND_DISK
         )
 
-        // Compute the degree centrality and time the operation
-        val startTime = System.nanoTime()
-
+        // Compute the degree centrality
         val triangleCount = TriangleCount.run(graph).vertices.map(_._2).reduce(_ + _) / 3
 
-        val endTime = System.nanoTime()
-
-        val totalMillis = (endTime - startTime) / 1000000
-
-        // Write the results to seperate files for time and output
-        val times = new File("/home/user/workspace-graphx/times/triangleCount.txt")
-        val bw = new BufferedWriter(new FileWriter(times, true))
-        bw.write(totalMillis + " ms\n")
-        bw.close()
-        
+        // Write the output to a file
         val outputs = new File("/home/user/workspace-graphx/outputs/triangleCount.txt")
-        val bw2 = new BufferedWriter(new FileWriter(outputs))
-        bw2.write(triangleCount.toString)
-        bw2.write("\n")
-        bw2.close()
+        val bw = new BufferedWriter(new FileWriter(outputs))
+        bw.write(triangleCount.toString)
+        bw.write("\n")
+        bw.close()
 
         // Stop the Spark context
         sc.stop()

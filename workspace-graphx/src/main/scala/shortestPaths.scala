@@ -32,30 +32,19 @@ object shortestPaths {
 
         val sourceVertexId = 0
 
-        // Compute the shortest paths and time the operation        
-        val startTime = System.nanoTime()
-
+        // Compute the shortest paths        
         val shortestPaths = ShortestPaths.run(reversedGraph, Seq(sourceVertexId)).vertices.map {
             case (id, spMap) => (id, spMap.getOrElse(sourceVertexId, Double.PositiveInfinity))
         }.collect().map {
             case (id, dist) => s"$id $dist"
         }
-
-        val endTime = System.nanoTime()
-
-        val totalMillis = (endTime - startTime) / 1000000
-
-        // Write the results to seperate files for time and output
-        val times = new File("/home/user/workspace-graphx/times/shortestPaths.txt")
-        val bw = new BufferedWriter(new FileWriter(times, true))
-        bw.write(totalMillis + " ms\n")
-        bw.close()
         
+        // Write the output to a file
         val outputs = new File("/home/user/workspace-graphx/outputs/shortestPaths.txt")
-        val bw2 = new BufferedWriter(new FileWriter(outputs))
-        bw2.write(shortestPaths.mkString("\n"))
-        bw2.write("\n")
-        bw2.close()
+        val bw = new BufferedWriter(new FileWriter(outputs))
+        bw.write(shortestPaths.mkString("\n"))
+        bw.write("\n")
+        bw.close()
 
         // Stop the Spark context
         sc.stop()

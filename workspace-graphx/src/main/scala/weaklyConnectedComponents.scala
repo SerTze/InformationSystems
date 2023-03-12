@@ -25,28 +25,17 @@ object weaklyConnectedComponents {
             vertexStorageLevel = StorageLevel.MEMORY_AND_DISK
         )
 
-        // Compute the weakly connected components and time the operation
-        val startTime = System.nanoTime()
-
+        // Compute the weakly connected components
         val weaklyConnectedComponents = graph.connectedComponents().vertices.collect().map{
             case (id, comp) => s"$id $comp"
         }
-
-        val endTime = System.nanoTime()
-
-        val totalMillis = (endTime - startTime) / 1000000
-
-        // Write the results to seperate files for time and output
-        val times = new File("/home/user/workspace-graphx/times/weaklyConnectedComponents.txt")
-        val bw = new BufferedWriter(new FileWriter(times, true))
-        bw.write(totalMillis + " ms\n")
-        bw.close()
         
+        // Write the output to a file
         val outputs = new File("/home/user/workspace-graphx/outputs/weaklyConnectedComponents.txt")
-        val bw2 = new BufferedWriter(new FileWriter(outputs))
-        bw2.write(weaklyConnectedComponents.mkString("\n"))
-        bw2.write("\n")
-        bw2.close()
+        val bw = new BufferedWriter(new FileWriter(outputs))
+        bw.write(weaklyConnectedComponents.mkString("\n"))
+        bw.write("\n")
+        bw.close()
 
         // Stop the Spark context
         sc.stop()
