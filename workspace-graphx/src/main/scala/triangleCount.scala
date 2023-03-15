@@ -26,7 +26,7 @@ object triangleCount {
             vertexStorageLevel = StorageLevel.MEMORY_AND_DISK
         )
 
-        // Compute the degree centrality
+        // Compute the triangle count
         val triangleCount = TriangleCount.run(graph).vertices.map(_._2).reduce(_ + _) / 3
 
         // Write the output to a file

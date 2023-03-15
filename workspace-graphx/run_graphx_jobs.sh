@@ -7,6 +7,12 @@ if [ -z "$1" ] || [ -z "$2" ]
     exit 1
 fi
 
+# Check if number of times is a valid integer
+if ! [[ "$1" =~ ^[0-9]+$ ]]; then
+  echo "Invalid number of times. Please provide a valid integer."
+  exit 1
+fi
+
 # Check if job name is valid
 case $2 in
     degreeCentrality | shortestPaths | triangleCount | weaklyConnectedComponents)

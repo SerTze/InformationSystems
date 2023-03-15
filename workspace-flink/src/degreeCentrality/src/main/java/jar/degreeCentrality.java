@@ -16,10 +16,13 @@ import org.apache.flink.api.java.ExecutionEnvironment;
 public class degreeCentrality {
 
     public static void main(String[] args) throws Exception {
+		
+		// Set up the execution environment
 		final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
 		String edgeListFilePath = "/home/user/data/web-Google.txt";
 
+		// Load the edges as a DataSet of Tuples
 		DataSet<Tuple2<Integer, Integer>> edges = env.readTextFile(edgeListFilePath)
 			.filter(line -> !line.startsWith("#"))
 			.map(line -> {
@@ -27,29 +30,21 @@ public class degreeCentrality {
 				return new Tuple2<Integer, Integer>(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
 			}).returns(Types.TUPLE(Types.INT, Types.INT));
 
+		// Create the graph
 		Graph<Integer, NullValue, NullValue> graph = Graph.fromTuple2DataSet(edges, env);
 
-		long toc = System.nanoTime();
-
+		// Compute the degree centrality
 		DataSet<Tuple2<Integer, LongValue>> result = graph.getDegrees();
 
 		ArrayList<Tuple2<Integer, LongValue>> degrees = new ArrayList<Tuple2<Integer, LongValue>>();
 		result.collect().forEach(degrees::add);
 
-		long tic = System.nanoTime();
-
-		long totalMillis = (tic-toc) / 1000000;
-
-		File times = new File("/home/user/workspace-flink/times/degreeCentrality.txt");
-		BufferedWriter bw = new BufferedWriter(new FileWriter(times, true));
-		bw.write(totalMillis + " ms\n");
-		bw.close();
-
+		// Write the output to a file
 		File outputs = new File("/home/user/workspace-flink/outputs/degreeCentrality.txt");
-		BufferedWriter bw2 = new BufferedWriter(new FileWriter(outputs));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(outputs));
 		for (Tuple2<Integer, LongValue> vertex : degrees) {
-			bw2.write(vertex.f0 + " " + vertex.f1 + "\n");
+			bw.write(vertex.f0 + " " + vertex.f1 + "\n");
 		}
-		bw2.close();
+		bw.close();
 	}
 }

@@ -29,7 +29,6 @@ object shortestPaths {
         // Create the reversed graph so that the shortest paths are computed from the source vertex
         val reversedEdges = graph.edges.map(e => Edge(e.dstId, e.srcId, e.attr))
         val reversedGraph = Graph(graph.vertices, reversedEdges)
-
         val sourceVertexId = 0
 
         // Compute the shortest paths        
