@@ -1,9 +1,21 @@
-# InformationSystems
-Analysis and Design of Information Systems
 
-Goal of this project is to benchmark two graph processing tools, Apache GraphX and Apache Flink Gelly, on a graph dataset. The metric used for the benchmark is execution time. The executed tasks are gonna be :
-* Degree Centrality
-* Connected Components
-* PageRank
-* Shortest Path
-* Triangle Count
+## Project Goal
+
+The goal of this project is to develop a system that allows for the comparison of the performance of graph processing systems. The comparison is based on the same dataset, workload, and hardware environment, and the results are validated.
+
+### System Functionality
+
+The system executes predefined queries on each system under test, measures the time required to complete each task, computes performance metrics for each system, and produces graphical representations of each metric for each SUT.
+
+The functions that are compared include:
+
+- Finding the shortest path
+- Degree centrality
+- Triangle count
+- Weakly connected components
+
+The two systems compared are Apache Spark GraphX and Apache Flink. Performance metrics include average, minimum and maximum query execution time.
+
+## Project Information
+
+This is a project/paper developed for NTUA's 9th Semester Course: Analysis and Design of Information Systems. The project was developed by Serafeim Tzelepis and Georgios Kyriakopoulos.
