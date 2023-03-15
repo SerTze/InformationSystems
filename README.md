@@ -15,3 +15,7 @@ The functions that are compared include:
 - Weakly connected components
 
 The two systems compared are Apache Spark GraphX and Apache Flink. Performance metrics include average, minimum and maximum query execution time.
+
+## Project Information
+
+This is a project/paper developed for NTUA's 9th Semester Course: Analysis and Design of Information Systems. The project was developed by Serafeim Tzelepis and Georgios Kyriakopoulos.
